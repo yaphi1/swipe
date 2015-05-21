@@ -48,8 +48,17 @@ $(function(){
 		var startY;
 
 
+		// default to mousedown and mouseup as touch simulators, but use native touch events if supported
+		var touchstart = 'mousedown';
+		var touchend = 'mouseup';
+		if(typeof(document.ontouchstart)!=='undefined' && typeof(document.ontouchend)!=='undefined'){
+			touchstart = 'touchstart';
+			touchend = 'touchend';
+		}
+
+
 		// touch start
-		$(document).on('touchstart', function(ev){
+		$(document).on(touchstart, function(ev){
 
 			var e = ev.originalEvent; // preference: use the native js event instead of the jquery one
 
@@ -59,7 +68,7 @@ $(function(){
 		});
 
 		// touch end
-		$(document).on('touchend', function(ev){
+		$(document).on(touchend, function(ev){
 			var e = ev.originalEvent; // preference: use the native js event instead of the jquery one
 
 			// get the end coordinates of the touch
@@ -87,6 +96,14 @@ $(function(){
 				$(document).trigger('swipeDown');
 			}
 		});
+
+
+
+
+
+
+
+
 	})();
 
 
@@ -110,7 +127,6 @@ $(function(){
 	$(document).on('swipeRight',function(){
 		$('#container')[0].innerHTML = 'swiped right';
 	});
-
 
 
 });
