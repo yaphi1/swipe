@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--[if lt IE 9]>
+	<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+<![endif]-->
+
+<style type="text/css">
+body{
+	margin: 0px;
+	font-size:20px;
+	font-family:sans-serif;
+	color:#333;
+}
+
+
+
+
+</style>
+
+</head>
+<body>
+
+<div id="container">
+	not swiped yet
+</div>
+
+
+<script src="jquery.js"></script>
+<script>
+
+
+$(function(){
+
+	/**********************************************************************
+	DETECT SWIPES
+		This function detects horizontal swipes and emits the following events
+			- swipeLeft
+			- swipeRight
+		Usage: $(document).on('swipeLeft',function(){ YOUR CODE HERE });
+	***********************************************************************/
+	(function detectSwipes(){
+		// these variables hold the starting coordinates for each touch
+		var startX;
+		var startY;
+
+
+		// touch start
+		$(document).on('touchstart', function(ev){
+
+			var e = ev.originalEvent; // preference: use the native js event instead of the jquery one
+
+			// get the starting coordinates of the touch
+			startX = e.pageX;
+			startY = e.pageY;
+		});
+
+		// touch end
+		$(document).on('touchend', function(ev){
+			var e = ev.originalEvent; // preference: use the native js event instead of the jquery one
+
+			// get the end coordinates of the touch
+			endX = e.pageX;
+			endY = e.pageY;
+
+			// SWIPE LEFT: if more than 30 px to left, and less than 60 px up or down
+			if(endX-startX < -30 && Math.abs(endY-startY) < 60){
+				$(document).trigger('swipeLeft');
+			}
+
+			// SWIPE RIGHT: if more than 30 px to right, and less than 60 px up or down
+			else if(endX-startX > 30 && Math.abs(endY-startY) < 60){
+				$(document).trigger('swipeRight');
+			}
+
+
+			// SWIPE UP: if more than 30 px up, and less than 60 px left or right
+			if(endY-startY < -30 && Math.abs(endX-startX) < 60){
+				$(document).trigger('swipeUp');
+			}
+
+			// SWIPE DOWN: if more than 30 px down, and less than 60 px left or right
+			if(endY-startY > 30 && Math.abs(endX-startX) < 60){
+				$(document).trigger('swipeDown');
+			}
+		});
+	})();
+
+
+
+
+
+	// these are just tests
+
+	$(document).on('swipeUp',function(){
+		$('#container')[0].innerHTML = 'swiped up';
+	});
+
+	$(document).on('swipeDown',function(){
+		$('#container')[0].innerHTML = 'swiped down';
+	});
+
+	$(document).on('swipeLeft',function(){
+		$('#container')[0].innerHTML = 'swiped left';
+	});
+
+	$(document).on('swipeRight',function(){
+		$('#container')[0].innerHTML = 'swiped right';
+	});
+
+
+
+});
+
+</script>
+</body>
+</html>
