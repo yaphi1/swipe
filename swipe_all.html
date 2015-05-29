@@ -37,15 +37,21 @@ $(function(){
 
 	/**********************************************************************
 	DETECT SWIPES
-		This function detects horizontal swipes and emits the following events
+		This function detects swipes and emits the following events
 			- swipeLeft
 			- swipeRight
+			- swipeUp
+			- swipeDown
 		Usage: $(document).on('swipeLeft',function(){ YOUR CODE HERE });
 	***********************************************************************/
 	(function detectSwipes(){
-		// these variables hold the starting coordinates for each touch
+
+		// these variables hold the starting and ending coordinates for each touch
 		var startX;
 		var startY;
+
+		var endX;
+		var endY;
 
 
 		// default to mousedown and mouseup as touch simulators, but use native touch events if supported
@@ -59,21 +65,48 @@ $(function(){
 
 		// touch start
 		$(document).on(touchstart, function(ev){
+			ev.preventDefault();
 
 			var e = ev.originalEvent; // preference: use the native js event instead of the jquery one
 
+
 			// get the starting coordinates of the touch
-			startX = e.pageX;
-			startY = e.pageY;
+			if(touchstart=='touchstart'){
+				startX = e.touches[0].pageX;
+				startY = e.touches[0].pageY;
+			}
+			else{
+				startX = e.pageX;
+				startY = e.pageY;
+			}
+
 		});
+
+		
+		// touch move
+		$(document).on('touchmove', function(ev){
+			ev.preventDefault();
+
+			var e = ev.originalEvent; // preference: use the native js event instead of the jquery one
+
+			endX = e.touches[0].pageX;
+			endY = e.touches[0].pageY;
+
+		});
+
 
 		// touch end
 		$(document).on(touchend, function(ev){
+			ev.preventDefault();
+
 			var e = ev.originalEvent; // preference: use the native js event instead of the jquery one
 
-			// get the end coordinates of the touch
-			endX = e.pageX;
-			endY = e.pageY;
+
+			// get the end coordinates of the touch (if not already recorded in touchmove)
+			if(touchend!=='touchend'){
+				endX = e.pageX;
+				endY = e.pageY;
+			}
 
 			// SWIPE LEFT: if more than 30 px to left, and less than 60 px up or down
 			if(endX-startX < -30 && Math.abs(endY-startY) < 60){
@@ -95,15 +128,9 @@ $(function(){
 			if(endY-startY > 30 && Math.abs(endX-startX) < 60){
 				$(document).trigger('swipeDown');
 			}
+
+
 		});
-
-
-
-
-
-
-
-
 	})();
 
 
